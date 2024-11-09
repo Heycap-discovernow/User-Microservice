@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { NATS_SERVER } from './config';
-import { AppModule } from './AppModule';
+import { NATS_SERVER } from 'src/config/index';
+import { AppModule } from 'src/AppModule';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
