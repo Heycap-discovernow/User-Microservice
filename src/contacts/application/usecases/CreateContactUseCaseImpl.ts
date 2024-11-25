@@ -13,5 +13,4 @@ export class CreateContactUseCaseImpl implements CreateContactUseCase {
     public async createContact(contact: ContactDTO): Promise<string> {
         return await this.contactRepository.createContact(contact);
     }
-
 }

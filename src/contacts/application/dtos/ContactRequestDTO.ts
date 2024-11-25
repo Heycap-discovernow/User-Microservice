@@ -4,5 +4,6 @@ export class ContactRequestDTO {
         public last_name: string,
         public email: string,
         public phone: string,
+        public channel?: string,
     ){}
 }

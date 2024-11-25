@@ -3,5 +3,6 @@ import { config } from "dotenv";
 config()
 
 export const NATS_SERVER = process.env.NATS_SERVER;
+export const TRANSPORT = process.env.TRANSPORT;
 export const JWT_KEY = process.env.JWT_KEY;
 export const DATABASE_URL = process.env.DATABASE_URL;
