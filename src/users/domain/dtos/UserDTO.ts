@@ -1,5 +1,5 @@
-import { PhoneVerified } from "../value_objects/PhoneVerified";
-import { Timestamp } from "../value_objects/Timestamp";
+import { PhoneVerified } from "src/users/domain/value_objects/PhoneVerified";
+import { Timestamp } from "src/users/domain/value_objects/Timestamp";
 
 export class UserDTO {
     constructor(

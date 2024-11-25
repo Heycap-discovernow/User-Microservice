@@ -2,7 +2,7 @@ import { Controller } from "@nestjs/common";
 import { MessagePattern, Payload } from "@nestjs/microservices";
 
 import { ContactService } from "src/contacts/application/services/ContactService";
-import { ContactDTO } from "src/contacts/domain/dtos/ContactDTO";
+import { ContactRequestDTO } from "src/contacts/application/dtos/ContactRequestDTO";
 
 @Controller()
 export class CreateContactListenerController {
@@ -11,7 +11,7 @@ export class CreateContactListenerController {
     ){}
 
     @MessagePattern('create-contact')
-    public async createContact(@Payload() contact: ContactDTO) {
+    public async createContact(@Payload() contact: ContactRequestDTO) {
         return await this.contactService.createContact(contact);
     }
 }
