@@ -1,13 +1,24 @@
-import { PhoneVerified } from "src/users/domain/value_objects/PhoneVerified";
 export class UserResponse {
+    public uuid: string;
+    public fullName: string;
+    public nickname: string;
+    public email: string;
+    public phone: string | null;
+    public avatar?: string | undefined;
     constructor(
-        public uuid:string,
-        public name: string,
-        public last_name: string,
-        public nickname: string,
-        public email: string,
-        public phone: string | null,
-        public phone_verified?: PhoneVerified | null,
-        public avatar?: string | null
-    ) {}
+        uuid: string,
+        name: string,
+        lastName: string,
+        nickname: string,
+        email: string,
+        phone: string,
+        avatar?: string
+    ) {
+        this.uuid = uuid;
+        this.fullName = name.concat(' ', lastName);
+        this.nickname = nickname;
+        this.email = email;
+        this.phone = phone;
+        this.avatar = avatar
+     }
 }

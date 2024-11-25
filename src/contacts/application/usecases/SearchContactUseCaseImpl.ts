@@ -1,4 +1,4 @@
-import { ContactDTO } from "src/contacts/domain/dtos/ContactDTO";
+import { Contact } from "src/contacts/domain/models/Contact";
 import { SearchContactUseCase } from "src/contacts/domain/ports/in/SearchContactUseCase";
 import { ContactRepository } from "src/contacts/domain/ports/out/ContactRepository";
 
@@ -10,7 +10,7 @@ export class SearchContactUseCaseImpl implements SearchContactUseCase {
         @Inject('ContactRepository') private readonly contactRepository: ContactRepository
     ){}
 
-    public async searchContact(contact_uuid: string): Promise<ContactDTO> {
+    public async searchContact(contact_uuid: string): Promise<Contact> {
         return await this.contactRepository.searchContact(contact_uuid);
     }
 }

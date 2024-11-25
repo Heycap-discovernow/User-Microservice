@@ -1,45 +1,45 @@
-import { GenerateJwtUseCase } from "src/users/domain/ports/in/token/GenerateJwtUseCase";
-import { ValidateJwtUseCase } from "src/users/domain/ports/in/token/ValidateJwtUseCase";
-import { GenerateCodeTokenUseCase } from "src/users/domain/ports/in/token/GenerateCodeTokenUseCase";
-import { VerifyCodeTokenUseCase } from "src/users/domain/ports/in/token/VerifyCodeTokenUseCase";
+import { Injectable } from "@nestjs/common";
 
-import { Inject, Injectable } from "@nestjs/common";
+import { sign, verify, JwtPayload } from "jsonwebtoken";
 
-import { sign } from "jsonwebtoken";
-import { createHash } from "crypto";
+import { JWT_KEY } from "src/config";
+import { UserDTO } from "src/users/domain/dtos/UserDTO";
+
 
 @Injectable()
-export class TokenService implements GenerateJwtUseCase, ValidateJwtUseCase, GenerateCodeTokenUseCase, VerifyCodeTokenUseCase {
-    constructor(
-        @Inject('GenerateJwtUseCase') private readonly generateJwtUseCase: GenerateJwtUseCase,
-        @Inject('ValidateJwtUseCase') private readonly validateJwtUseCase: ValidateJwtUseCase,
-        @Inject('GenerateCodeTokenUseCase') private readonly generateCodeTokenUseCase: GenerateCodeTokenUseCase,
-        @Inject('VerifyCodeTokenUseCase') private readonly verifyCodeTokenUseCase: VerifyCodeTokenUseCase
-    ){}
-    
-    public async generateJwt(userUUID: string, payload: string, secretKey: string): Promise<string> {
-        const data = JSON.parse(payload);
-        const token = sign(data, secretKey, { expiresIn: '10m'})
-        await this.generateJwtUseCase.generateJwt(userUUID, token, undefined);
+export class TokenService {
+    constructor() { }
+
+    public generateJwtLogin(user: UserDTO, code: string): string {
+        const token = sign({
+            uuid: user.uuid,
+            email: user.email,
+            phone: user.phone,
+            fullname: user.name.concat(' ', user.last_name),
+            nickname: user.nickname,
+            avatar: user.avatar,
+            mfa_code: code
+        }, JWT_KEY, { expiresIn: '1h' });
+
         return token;
     }
 
-    public async validateJwt(token: string, type: string, userUUID: string): Promise<string> {
-        return this.validateJwtUseCase.validateJwt(token, type, userUUID);
+    public generateJwtForgotPassword(user: UserDTO, code: string): string {
+        const token = sign({
+            uuid: user.uuid,
+            email: user.email,
+            code: code
+        }, JWT_KEY, { expiresIn: '1m' });
+
+        return token;
     }
 
-    public async generateCodeToken(userUUID: string): Promise<string> {
-        const code =  Math.floor(1000 + Math.random() * 9000).toString();
-        const token = createHash('sha256').update(code.concat(userUUID)).digest('hex');
-        // const payload = JSON.stringify({ code: code });
-        // const token = await this.generateJwt(userUUID, payload, (code + userUUID));
-        const tokenCreated = await this.generateCodeTokenUseCase.generateCodeToken(token, userUUID);
-        return tokenCreated;
+    public decodeJwt(token: string): JwtPayload {
+        return verify(token, JWT_KEY) as JwtPayload; //verify no solo decodifica el token, sino que tambien verifica su validez y firma
     }
 
-    public async verifyCodeToken(userUUID: string, code: string): Promise<string> {
-        const token = createHash('sha256').update(code.concat(userUUID)).digest('hex');
-        const tokenFound = await this.verifyCodeTokenUseCase.verifyCodeToken(token, userUUID);
-        return tokenFound;
+    public generateCode(): string {
+        return Math.floor(1000 + Math.random() * 9000).toString();
     }
+
 }

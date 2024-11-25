@@ -8,8 +8,8 @@ export class SearchContactListenerController {
         private readonly contactService: ContactService
     ){}
 
-    @MessagePattern("search-contacts")
-    public async searchContact(@Payload() contact_uuid: string) {
-        return await this.contactService.searchContact(contact_uuid);
+    @MessagePattern("search-contact")
+    public async searchContact(@Payload() phone: string) {
+        return await this.contactService.searchContact(phone);
     }
 }

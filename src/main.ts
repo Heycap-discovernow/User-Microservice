@@ -7,14 +7,8 @@ import { AppModule } from 'src/AppModule';
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     transport: Transport.NATS, //Here we define the broker or events emitter
-    // transport: Transport.RMQ,
     options: {
       servers: NATS_SERVER,
-      // urls: ['URL AQUI'],
-      // queue: 'Name_queue',
-      // queueOptions: {
-      //   durable: false
-      // }
     }
   });
   app.useGlobalPipes( //this use for validate and transform the into data
@@ -27,4 +21,4 @@ async function bootstrap() {
   Logger.log("User-Microservice started");
   await app.listen();
 }
-bootstrap();
+bootstrap();    

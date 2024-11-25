@@ -14,41 +14,42 @@ datasource db {
 }
 
 model contact {
-  contact_id      Int           @id @default(autoincrement())
-  uuid            String        @unique @db.VarChar
-  name            String        @db.VarChar(50)
-  last_name       String        @db.VarChar(50)
-  email           String        @unique @db.VarChar
-  phone           String        @db.VarChar(10)
-  user            user?        @relation("UserContact")
+  contact_id Int    @id @default(autoincrement())
+  uuid       String @unique @db.VarChar
+  name       String @db.VarChar(50)
+  last_name  String @db.VarChar(50)
+  email      String @unique @db.VarChar
+  phone      String @unique @db.VarChar(10)
+  code       String @db.VarChar(6)
+  user       user?  @relation("UserContact")
 }
 
 model user {
-  user_id         Int           @id @default(autoincrement())
-  uuid            String        @unique @db.VarChar
-  contact_uuid    String        @unique @db.VarChar
-  name            String        @db.VarChar(50)
-  last_name       String        @db.VarChar(50)
-  nickname        String        @unique @db.VarChar(50)
-  email           String        @unique @db.VarChar
-  password        String        @db.VarChar
-  phone           String        @db.VarChar(10)
-  phone_verified  String       @default("INACTIVE") @db.VarChar
-  avatar          String?       @db.VarChar
-  user_created_at DateTime      @default(now()) @db.Timestamp(6)
-  user_updated_at DateTime      @default(now()) @db.Timestamp(6)
-  user_deleted_at DateTime?     @db.Timestamp(6)
+  user_id         Int       @id @default(autoincrement())
+  uuid            String    @unique @db.VarChar
+  contact_uuid    String    @unique @db.VarChar
+  name            String    @db.VarChar(50)
+  last_name       String    @db.VarChar(50)
+  nickname        String    @unique @db.VarChar(50)
+  email           String    @unique @db.VarChar
+  password        String    @db.VarChar
+  phone           String    @db.VarChar(10)
+  phone_verified  String    @default("INACTIVE") @db.VarChar
+  avatar          String?   @db.VarChar
+  user_created_at DateTime  @default(now()) @db.Timestamp(6)
+  user_updated_at DateTime  @default(now()) @db.Timestamp(6)
+  user_deleted_at DateTime? @db.Timestamp(6)
   // status          String        @default("ACTIVE") @db.VarChar //POSIBLEMENTE TENGAS QUE HACER ESTO PARA SIMULAR UNA ELIMINACION DE USUARIO XD
-  contacts       contact       @relation(fields: [contact_uuid], references: [uuid], name: "UserContact", onDelete: Cascade)
-  tokens         token[]       @relation("UserTokens")
+  contacts        contact   @relation(fields: [contact_uuid], references: [uuid], name: "UserContact", onDelete: Cascade)
+  tokens          token[]   @relation("UserTokens")
 }
 
 model token {
-  token       String    @id @unique @db.VarChar
-  user_uuid   String    @db.VarChar
-  type        String    @db.VarChar
-  created_at  DateTime  @db.Timestamp(6) @default(now())
-  expires_at  DateTime  @db.Timestamp(6) @default(now())
-  status      String    @db.VarChar
-  user        user      @relation(fields: [user_uuid], references: [uuid], name: "UserTokens", onDelete: Cascade)
+  token      String   @id @unique @db.VarChar
+  user_uuid  String   @db.VarChar
+  type       String   @db.VarChar
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  expires_at DateTime @default(now()) @db.Timestamp(6)
+  status     String   @db.VarChar
+  user       user     @relation(fields: [user_uuid], references: [uuid], name: "UserTokens", onDelete: Cascade)
 }
