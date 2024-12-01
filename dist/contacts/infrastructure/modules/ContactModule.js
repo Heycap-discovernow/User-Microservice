@@ -8,21 +8,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContactModule = void 0;
 const common_1 = require("@nestjs/common");
-const CreateContactListenerController_1 = require("../adapters/listeners/CreateContactListenerController");
-const ContactRepositoryAdapter_1 = require("../adapters/repositories/ContactRepositoryAdapter");
 const NotificationTransportModule_1 = require("../../../users/infrastructure/modules/NotificationTransportModule");
+const ContactRepositoryAdapter_1 = require("../adapters/repositories/ContactRepositoryAdapter");
+const CreateContactListener_1 = require("../adapters/listeners/CreateContactListener");
+const VerifyNumberListener_1 = require("../adapters/listeners/VerifyNumberListener");
 const ContactService_1 = require("../../application/services/ContactService");
+const TokenService_1 = require("../../../users/application/services/TokenService");
 const CreateContactUseCaseImpl_1 = require("../../application/usecases/CreateContactUseCaseImpl");
 const SearchContactUseCaseImpl_1 = require("../../application/usecases/SearchContactUseCaseImpl");
+const CreateCodeUseCaseImpl_1 = require("../../application/usecases/CreateCodeUseCaseImpl");
+const SearchCodeUseCaseImpl_1 = require("../../application/usecases/SearchCodeUseCaseImpl");
 let ContactModule = class ContactModule {
 };
 exports.ContactModule = ContactModule;
 exports.ContactModule = ContactModule = __decorate([
     (0, common_1.Module)({
         imports: [NotificationTransportModule_1.NotificationTransportModule],
-        controllers: [CreateContactListenerController_1.CreateContactListenerController],
+        controllers: [
+            CreateContactListener_1.CreateContactListener,
+            VerifyNumberListener_1.VerifyNumberListener
+        ],
         providers: [
             ContactService_1.ContactService,
+            TokenService_1.TokenService,
             {
                 provide: "CreateContactUseCase",
                 useClass: CreateContactUseCaseImpl_1.CreateContactUseCaseImpl
@@ -30,6 +38,14 @@ exports.ContactModule = ContactModule = __decorate([
             {
                 provide: "SearchContactUseCase",
                 useClass: SearchContactUseCaseImpl_1.SearchContactUseCaseImpl
+            },
+            {
+                provide: "CreateCodeUseCase",
+                useClass: CreateCodeUseCaseImpl_1.CreateCodeUseCaseImpl
+            },
+            {
+                provide: "SearchCodeUseCase",
+                useClass: SearchCodeUseCaseImpl_1.SearchCodeUseCaseImpl
             },
             {
                 provide: "ContactRepository",

@@ -19,7 +19,6 @@ class Contact {
         this.last_name = last_name;
         this.email = email;
         this.phone = phone;
-        this.code = Math.floor(1000 + Math.random() * 9000).toString();
     }
 }
 exports.Contact = Contact;
@@ -43,9 +42,4 @@ __decorate([
     (0, class_validator_1.IsMobilePhone)(),
     __metadata("design:type", String)
 ], Contact.prototype, "phone", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Length)(4, 4),
-    __metadata("design:type", String)
-], Contact.prototype, "code", void 0);
 //# sourceMappingURL=Contact.js.map

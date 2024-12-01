@@ -5,7 +5,7 @@ export class ContactDTO {
         public last_name: string,
         public email: string,
         public phone: string,
-        public code: string,
+        // public code: string,
         public channel?: string,
     ){}
 }

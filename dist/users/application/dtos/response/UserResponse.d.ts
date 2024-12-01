@@ -5,5 +5,6 @@ export declare class UserResponse {
     email: string;
     phone: string | null;
     avatar?: string | undefined;
-    constructor(uuid: string, name: string, lastName: string, nickname: string, email: string, phone: string, avatar?: string);
+    contact_uuid?: string | undefined;
+    constructor(uuid: string, name: string, lastName: string, nickname: string, email: string, phone: string, avatar?: string, contact_uuid?: string);
 }

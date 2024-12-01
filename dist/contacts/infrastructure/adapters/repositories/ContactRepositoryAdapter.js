@@ -35,8 +35,54 @@ let ContactRepositoryAdapter = class ContactRepositoryAdapter extends client_1.P
         }
         const contact = new Contact_1.Contact(contactFound.name, contactFound.last_name, contactFound.email, contactFound.phone);
         contact.uuid = contactFound.uuid;
-        contact.code = contactFound.code;
         return contact;
+    }
+    async createCode(code) {
+        const existingCode = await this.code.findFirst({
+            where: {
+                contact_uuid: code.contact_uuid,
+                type: code.type
+            }
+        });
+        if (existingCode) {
+            const updatedCode = await this.code.update({
+                where: {
+                    id: existingCode.id
+                },
+                data: {
+                    code: code.code,
+                    expires_at: code.expires_at,
+                    created_at: code.created_at
+                }
+            });
+            if (!updatedCode) {
+                throw new microservices_1.RpcException("Code not updated");
+            }
+            return "Code updated successfully";
+        }
+        else {
+            const saveCode = await this.code.create({
+                data: code
+            });
+            if (!saveCode) {
+                throw new microservices_1.RpcException("Code not created");
+            }
+            return "Code created successfully";
+        }
+    }
+    async searchCode(contact_uuid, type) {
+        const codeFound = await this.code.findFirst({
+            where: {
+                contact_uuid: contact_uuid,
+                AND: {
+                    type: type
+                }
+            }
+        });
+        if (!codeFound) {
+            throw new microservices_1.RpcException("Code not found");
+        }
+        return codeFound.code;
     }
 };
 exports.ContactRepositoryAdapter = ContactRepositoryAdapter;

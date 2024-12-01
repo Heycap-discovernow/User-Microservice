@@ -21,12 +21,17 @@ let GetByIdListener = class GetByIdListener {
         this.userService = userService;
     }
     async getById(user_uuid) {
-        return await this.userService.getUserById(user_uuid);
+        try {
+            return await this.userService.getUserById(user_uuid);
+        }
+        catch (error) {
+            return error;
+        }
     }
 };
 exports.GetByIdListener = GetByIdListener;
 __decorate([
-    (0, microservices_1.MessagePattern)('get-by-id-user'),
+    (0, microservices_1.MessagePattern)('get-user-by-id'),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

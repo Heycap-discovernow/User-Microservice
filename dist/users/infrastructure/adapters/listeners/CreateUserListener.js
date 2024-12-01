@@ -15,15 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUserListener = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
+const config_1 = require("../../../../config");
 const UserRequest_1 = require("../../../application/dtos/request/UserRequest");
 const UserManagementService_1 = require("../../../application/services/UserManagementService");
 let CreateUserListener = class CreateUserListener {
-    constructor(userService) {
+    constructor(userService, client) {
         this.userService = userService;
+        this.client = client;
     }
     async createUser(user) {
         try {
-            return this.userService.createUser(user);
+            return this.userService.createUser(user, this.client);
         }
         catch (error) {
             return error;
@@ -40,6 +42,8 @@ __decorate([
 ], CreateUserListener.prototype, "createUser", null);
 exports.CreateUserListener = CreateUserListener = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [UserManagementService_1.UserManagementService])
+    __param(1, (0, common_1.Inject)(config_1.TRANSPORT)),
+    __metadata("design:paramtypes", [UserManagementService_1.UserManagementService,
+        microservices_1.ClientProxy])
 ], CreateUserListener);
 //# sourceMappingURL=CreateUserListener.js.map

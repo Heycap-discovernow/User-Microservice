@@ -9,8 +9,12 @@ export class GetByIdListener {
         private readonly userService: UserManagementService
     ) { }
 
-    @MessagePattern('get-by-id-user')
+    @MessagePattern('get-user-by-id')
     public async getById(@Payload() user_uuid: string) {
-        return await this.userService.getUserById(user_uuid);
+        try {
+            return await this.userService.getUserById(user_uuid);
+        } catch (error) {
+            return error;
+        }
     }
 }

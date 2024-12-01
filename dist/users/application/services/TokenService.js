@@ -15,7 +15,7 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 const config_1 = require("../../../config");
 let TokenService = class TokenService {
     constructor() { }
-    generateJwtLogin(user, code) {
+    generateJwtLogin(user) {
         const token = (0, jsonwebtoken_1.sign)({
             uuid: user.uuid,
             email: user.email,
@@ -23,23 +23,27 @@ let TokenService = class TokenService {
             fullname: user.name.concat(' ', user.last_name),
             nickname: user.nickname,
             avatar: user.avatar,
-            mfa_code: code
         }, config_1.JWT_KEY, { expiresIn: '1h' });
         return token;
     }
-    generateJwtForgotPassword(user, code) {
+    generateJwtForgotPassword(user) {
         const token = (0, jsonwebtoken_1.sign)({
             uuid: user.uuid,
             email: user.email,
-            code: code
         }, config_1.JWT_KEY, { expiresIn: '1m' });
         return token;
     }
-    decodeJwt(token) {
-        return (0, jsonwebtoken_1.verify)(token, config_1.JWT_KEY);
+    decodeJwt(token, key) {
+        const secretKey = key || config_1.JWT_KEY;
+        return (0, jsonwebtoken_1.verify)(token, secretKey);
     }
     generateCode() {
         return Math.floor(1000 + Math.random() * 9000).toString();
+    }
+    generateCodeToken(uuid, code) {
+        return (0, jsonwebtoken_1.sign)({
+            code: code
+        }, uuid, { expiresIn: '3m' });
     }
 };
 exports.TokenService = TokenService;

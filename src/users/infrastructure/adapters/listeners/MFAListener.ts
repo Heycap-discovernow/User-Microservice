@@ -10,10 +10,10 @@ export class MFAListener {
     ) { }
 
     @MessagePattern('verify-number-login')
-    public async changePassword(@Payload() payload: { token: string, code: string }) { //Posiblemente ya no sea necesario este listener
+    public async changePassword(@Payload() payload: { code: string, user_uuid: string, type: string }) { //Posiblemente ya no sea necesario este listener
         try {
-            const { token, code } = payload;
-            return await this.userService.mfaLogin(token, code);
+            const { code, user_uuid, type } = payload;
+            return await this.userService.mfaLogin(code, user_uuid, type);
         } catch (error) {
             return error;
         }

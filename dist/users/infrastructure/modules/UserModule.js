@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const ContactModule_1 = require("../../../contacts/infrastructure/modules/ContactModule");
 const NotificationTransportModule_1 = require("./NotificationTransportModule");
 const CreateUserListener_1 = require("../adapters/listeners/CreateUserListener");
+const GetByIdListener_1 = require("../adapters/listeners/GetByIdListener");
 const SearchUserListener_1 = require("../adapters/listeners/SearchUserListener");
 const UpdateUserListener_1 = require("../adapters/listeners/UpdateUserListener");
 const DeleteUserListener_1 = require("../adapters/listeners/DeleteUserListener");
@@ -21,7 +22,6 @@ const EmailForgotPassword_1 = require("../adapters/listeners/EmailForgotPassword
 const UpdatePasswordListener_1 = require("../adapters/listeners/UpdatePasswordListener");
 const VerifyCodeForgotPasswordListener_1 = require("../adapters/listeners/VerifyCodeForgotPasswordListener");
 const ResendCodeListener_1 = require("../adapters/listeners/ResendCodeListener");
-const VerifyNumberListener_1 = require("../adapters/listeners/VerifyNumberListener");
 const UserManagementService_1 = require("../../application/services/UserManagementService");
 const UserSearchService_1 = require("../../application/services/UserSearchService");
 const UserCreationService_1 = require("../../application/services/UserCreationService");
@@ -47,6 +47,7 @@ exports.UserModule = UserModule = __decorate([
         imports: [NotificationTransportModule_1.NotificationTransportModule, ContactModule_1.ContactModule],
         controllers: [
             CreateUserListener_1.CreateUserListener,
+            GetByIdListener_1.GetByIdListener,
             SearchUserListener_1.SearchUserListener,
             UpdateUserListener_1.UpdateUserListener,
             DeleteUserListener_1.DeletUserListener,
@@ -57,7 +58,6 @@ exports.UserModule = UserModule = __decorate([
             UpdatePasswordListener_1.UpdatePasswordListener,
             VerifyCodeForgotPasswordListener_1.VerifyCodeForgotPasswordListener,
             ResendCodeListener_1.ResendCodeListener,
-            VerifyNumberListener_1.VerifyNumberListener
         ],
         providers: [
             UserSearchService_1.UserSearchService,

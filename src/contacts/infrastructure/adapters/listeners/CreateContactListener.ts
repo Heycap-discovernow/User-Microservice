@@ -5,7 +5,7 @@ import { ContactService } from "src/contacts/application/services/ContactService
 import { ContactRequestDTO } from "src/contacts/application/dtos/ContactRequestDTO";
 
 @Controller()
-export class CreateContactListenerController {
+export class CreateContactListener {
     constructor(
         private readonly contactService: ContactService
     ){}

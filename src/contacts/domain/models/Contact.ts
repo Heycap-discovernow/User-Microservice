@@ -17,9 +17,9 @@ export class Contact {
     @IsMobilePhone()
     public phone: string;
 
-    @IsString()
-    @Length(4, 4)
-    public code: string;
+    // @IsString()
+    // @Length(4, 4)
+    // public code: string;
 
     constructor(name: string, last_name: string, email: string, phone: string){
         this.uuid = uuidv4();
@@ -27,6 +27,6 @@ export class Contact {
         this.last_name = last_name;
         this.email = email;
         this.phone = phone;
-        this.code =  Math.floor(1000 + Math.random() * 9000).toString();
+        // this.code =  Math.floor(1000 + Math.random() * 9000).toString();
     }
 }

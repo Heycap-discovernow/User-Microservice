@@ -12,12 +12,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateContactListenerController = void 0;
+exports.CreateContactListener = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
 const ContactService_1 = require("../../../application/services/ContactService");
 const ContactRequestDTO_1 = require("../../../application/dtos/ContactRequestDTO");
-let CreateContactListenerController = class CreateContactListenerController {
+let CreateContactListener = class CreateContactListener {
     constructor(contactService) {
         this.contactService = contactService;
     }
@@ -25,16 +25,16 @@ let CreateContactListenerController = class CreateContactListenerController {
         return await this.contactService.createContact(contact);
     }
 };
-exports.CreateContactListenerController = CreateContactListenerController;
+exports.CreateContactListener = CreateContactListener;
 __decorate([
     (0, microservices_1.MessagePattern)('create-contact'),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [ContactRequestDTO_1.ContactRequestDTO]),
     __metadata("design:returntype", Promise)
-], CreateContactListenerController.prototype, "createContact", null);
-exports.CreateContactListenerController = CreateContactListenerController = __decorate([
+], CreateContactListener.prototype, "createContact", null);
+exports.CreateContactListener = CreateContactListener = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [ContactService_1.ContactService])
-], CreateContactListenerController);
-//# sourceMappingURL=CreateContactListenerController.js.map
+], CreateContactListener);
+//# sourceMappingURL=CreateContactListener.js.map

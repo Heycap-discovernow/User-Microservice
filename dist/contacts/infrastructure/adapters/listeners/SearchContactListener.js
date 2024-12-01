@@ -12,33 +12,28 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VerifyNumberListener = void 0;
+exports.SearchContactListener = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
-const UserManagementService_1 = require("../../../application/services/UserManagementService");
-let VerifyNumberListener = class VerifyNumberListener {
-    constructor(userService) {
-        this.userService = userService;
+const ContactService_1 = require("../../../application/services/ContactService");
+let SearchContactListener = class SearchContactListener {
+    constructor(contactService) {
+        this.contactService = contactService;
     }
-    async verifyNumberListener(payload) {
-        try {
-            const { token, code } = payload;
-        }
-        catch (error) {
-            return error;
-        }
+    async searchContact(phone) {
+        return await this.contactService.searchContact(phone);
     }
 };
-exports.VerifyNumberListener = VerifyNumberListener;
+exports.SearchContactListener = SearchContactListener;
 __decorate([
-    (0, microservices_1.MessagePattern)('verify-number-register'),
+    (0, microservices_1.MessagePattern)("search-contact"),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], VerifyNumberListener.prototype, "verifyNumberListener", null);
-exports.VerifyNumberListener = VerifyNumberListener = __decorate([
+], SearchContactListener.prototype, "searchContact", null);
+exports.SearchContactListener = SearchContactListener = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [UserManagementService_1.UserManagementService])
-], VerifyNumberListener);
-//# sourceMappingURL=VerifyNumberListener.js.map
+    __metadata("design:paramtypes", [ContactService_1.ContactService])
+], SearchContactListener);
+//# sourceMappingURL=SearchContactListener.js.map

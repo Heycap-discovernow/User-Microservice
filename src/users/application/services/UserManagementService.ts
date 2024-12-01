@@ -1,9 +1,7 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ClientProxy, RpcException } from "@nestjs/microservices";
 
 import { Builder } from "builder-pattern";
-
-import { TRANSPORT } from "src/config";
 
 import { UserRequest } from "src/users/application/dtos/request/UserRequest";
 import { BuilderRequest } from "src/users/application/dtos/request/BuilderRequest";
@@ -16,6 +14,7 @@ import { UserUpdateService } from "src/users/application/services/UserUpdateServ
 import { UserLoginService } from "src/users/application/services/UserLoginService";
 import { UserDeletionService } from "src/users/application/services/UserDeletionService";
 import { TokenService } from "src/users/application/services/TokenService";
+import { ContactService } from "src/contacts/application/services/ContactService";
 
 import { UpdateUserDTO } from "src/users/domain/dtos/UpdateUserDTO";
 
@@ -28,7 +27,7 @@ export class UserManagementService {
         private readonly userDeletionService: UserDeletionService,
         private readonly userLoginService: UserLoginService,
         private readonly tokenService: TokenService,
-        @Inject(TRANSPORT) private readonly client: ClientProxy
+        private readonly contactService: ContactService
     ) { }
 
     public async getUserById(uuid: string): Promise<UserResponse> {
@@ -41,6 +40,7 @@ export class UserManagementService {
             user.email,
             user.phone,
             user.avatar,
+            user.contact_uuid
         );
         return userResponse;
     }
@@ -101,19 +101,25 @@ export class UserManagementService {
         return usersResponse;
     }
 
-    public async createUser(data: UserRequest): Promise<string> {
-        return await this.userCreationService.createUser(data);
+    public async createUser(data: UserRequest, client: ClientProxy): Promise<string> {
+        const result = await this.userCreationService.createUser(data);
+        if (!result) {
+            throw new RpcException("User not created");
+        }
+        return result;
     }
 
-    public async loginUser(email: string, password: string): Promise<string> {
+    public async loginUser(email: string, password: string, client: ClientProxy): Promise<string> {
         const user =  await this.userLoginService.login(email, password);
         const code = this.tokenService.generateCode();
+        const codeToken = this.tokenService.generateCodeToken(user.contact_uuid, code)
+        const saveCode = await this.contactService.createCode(user.contact_uuid, codeToken, 'LOGIN')
         const builder = {
-            client: this.client,
-            channel: "email",
-            destination: user.email,
-            subject: "Verification code to authorization of sign in",
-            message: "Your verification code is: ".concat(code),
+            client: client,
+            channel: "whatsapp",
+            destination: user.phone,
+            // subject: "Verification code to authorization of sign in",
+            message: code,
             contact_uuid: user.contact_uuid,
             type: 'authorization'
         }
@@ -122,14 +128,20 @@ export class UserManagementService {
             throw new RpcException("Error sending the verification code, please try again");
 
         }
-        const token = this.tokenService.generateJwtLogin(user, code);
+        const token = this.tokenService.generateJwtLogin(user);
         return token;
     }
 
-    public async mfaLogin(token: string, code: string): Promise<boolean> { //Posiblemente ya no sea necesaria esta funcion
-        const payload = this.tokenService.decodeJwt(token);
-        const uuid = payload.uuid;
-        return await this.userLoginService.verifyPhone(uuid, code);
+    public async mfaLogin(code: string, user_uuid: string, type: string): Promise<boolean> { //Posiblemente ya no sea necesaria esta funcion
+        const user = await this.getUserById(user_uuid);
+        const codeFound = await this.contactService.searchCode(user.contact_uuid, type);
+        const codeDecoded = this.tokenService.decodeJwt(codeFound, user.contact_uuid);
+        if (typeof codeDecoded === 'object' && 'code' in codeDecoded) {
+            if (code === codeDecoded.code) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public async updateUser(token: string, data: UpdateUserDTO): Promise<string> {
@@ -144,14 +156,14 @@ export class UserManagementService {
         return await this.userUpdateService.changePassword(uuid, newPassword);
     }
 
-    public async forgotPassword(email: string): Promise<ForgotPasswordResponse> {
+    public async forgotPassword(email: string, client: ClientProxy): Promise<ForgotPasswordResponse> {
         const user = await this.userSearchService.getByEmail(email);
         if (!user) {
             throw new RpcException("Email not found, please try again");
         }
         const code = this.tokenService.generateCode();
         const builder = {
-            client: this.client,
+            client: client,
             channel: "email",
             destination: user.email,
             subject: "Verification code to change password",
@@ -164,7 +176,7 @@ export class UserManagementService {
             throw new RpcException("Error sending the verification code, please try again");
 
         }
-        const token = this.tokenService.generateJwtForgotPassword(user, code);
+        const token = this.tokenService.generateJwtForgotPassword(user);
         return new ForgotPasswordResponse(token, "Please introduce the verification code that we sent to your email");
     }
 
@@ -204,14 +216,11 @@ export class UserManagementService {
         return "Code sent";
     }
 
-    public async resendCodeForgotPass(email: string): Promise<ForgotPasswordResponse> {
-        const result = await this.forgotPassword(email);
+    public async resendCodeForgotPass(email: string, client: ClientProxy): Promise<ForgotPasswordResponse> {
+        const result = await this.forgotPassword(email, client);
         if(!result){
             throw new RpcException("Error to resend the code, please try again");
         }
         return new ForgotPasswordResponse(result.token, "Code resent".concat(" ", result.message));
     }
-
-    // public async verifyNumber(code: string, contact_uuid: string): Promise<string> { //Posiblemente ya no sea necesaria esta funcion
-    // } 
 }

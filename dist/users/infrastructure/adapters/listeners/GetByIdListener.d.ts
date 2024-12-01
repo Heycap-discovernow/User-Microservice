@@ -2,5 +2,5 @@ import { UserManagementService } from "src/users/application/services/UserManage
 export declare class GetByIdListener {
     private readonly userService;
     constructor(userService: UserManagementService);
-    getById(user_uuid: string): Promise<import("../../../application/dtos/response/UserResponse").UserResponse>;
+    getById(user_uuid: string): Promise<any>;
 }

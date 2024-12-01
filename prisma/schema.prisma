@@ -20,8 +20,8 @@ model contact {
   last_name  String @db.VarChar(50)
   email      String @unique @db.VarChar
   phone      String @unique @db.VarChar(10)
-  code       String @db.VarChar(6)
   user       user?  @relation("UserContact")
+  codes      code[] @relation("CodeContact")
 }
 
 model user {
@@ -52,4 +52,15 @@ model token {
   expires_at DateTime @default(now()) @db.Timestamp(6)
   status     String   @db.VarChar
   user       user     @relation(fields: [user_uuid], references: [uuid], name: "UserTokens", onDelete: Cascade)
+}
+
+//debes de agregar una entidad codigos de verificacion seria bueno que solo tuviera 3 registros, contact_uuid, code y type = register, password, login
+model code {
+  id           Int      @id @default(autoincrement())
+  contact_uuid String   @db.VarChar
+  code         String   @db.VarChar @unique
+  type         String   @db.VarChar
+  created_at   DateTime @default(now()) @db.Timestamp(6)
+  expires_at   DateTime @db.Timestamp(6)
+  contact      contact  @relation(fields: [contact_uuid], references: [uuid], name: "CodeContact", onDelete: Cascade)
 }

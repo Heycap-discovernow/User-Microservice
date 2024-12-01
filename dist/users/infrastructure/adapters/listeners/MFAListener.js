@@ -22,8 +22,8 @@ let MFAListener = class MFAListener {
     }
     async changePassword(payload) {
         try {
-            const { token, code } = payload;
-            return await this.userService.mfaLogin(token, code);
+            const { code, user_uuid, type } = payload;
+            return await this.userService.mfaLogin(code, user_uuid, type);
         }
         catch (error) {
             return error;

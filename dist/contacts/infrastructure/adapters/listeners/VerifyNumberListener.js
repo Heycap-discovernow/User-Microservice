@@ -12,28 +12,34 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SearchContactListenerController = void 0;
+exports.VerifyNumberListener = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
 const ContactService_1 = require("../../../application/services/ContactService");
-let SearchContactListenerController = class SearchContactListenerController {
+let VerifyNumberListener = class VerifyNumberListener {
     constructor(contactService) {
         this.contactService = contactService;
     }
-    async searchContact(phone) {
-        return await this.contactService.searchContact(phone);
+    async verifyNumberListener(payload) {
+        try {
+            const { code, phone, type } = payload;
+            return await this.contactService.verifyNumber(code, phone, type);
+        }
+        catch (error) {
+            return error;
+        }
     }
 };
-exports.SearchContactListenerController = SearchContactListenerController;
+exports.VerifyNumberListener = VerifyNumberListener;
 __decorate([
-    (0, microservices_1.MessagePattern)("search-contact"),
+    (0, microservices_1.MessagePattern)('verify-number-register'),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], SearchContactListenerController.prototype, "searchContact", null);
-exports.SearchContactListenerController = SearchContactListenerController = __decorate([
+], VerifyNumberListener.prototype, "verifyNumberListener", null);
+exports.VerifyNumberListener = VerifyNumberListener = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [ContactService_1.ContactService])
-], SearchContactListenerController);
-//# sourceMappingURL=SearchContactListenerController.js.map
+], VerifyNumberListener);
+//# sourceMappingURL=VerifyNumberListener.js.map

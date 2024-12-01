@@ -3,7 +3,7 @@ import { MessagePattern, Payload } from "@nestjs/microservices";
 import { ContactService } from "src/contacts/application/services/ContactService";
 
 @Controller()
-export class SearchContactListenerController {
+export class SearchContactListener {
     constructor(
         private readonly contactService: ContactService
     ){}

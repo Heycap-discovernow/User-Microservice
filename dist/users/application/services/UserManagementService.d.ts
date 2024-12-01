@@ -9,6 +9,7 @@ import { UserUpdateService } from "src/users/application/services/UserUpdateServ
 import { UserLoginService } from "src/users/application/services/UserLoginService";
 import { UserDeletionService } from "src/users/application/services/UserDeletionService";
 import { TokenService } from "src/users/application/services/TokenService";
+import { ContactService } from "src/contacts/application/services/ContactService";
 import { UpdateUserDTO } from "src/users/domain/dtos/UpdateUserDTO";
 export declare class UserManagementService {
     private readonly userSearchService;
@@ -17,20 +18,20 @@ export declare class UserManagementService {
     private readonly userDeletionService;
     private readonly userLoginService;
     private readonly tokenService;
-    private readonly client;
-    constructor(userSearchService: UserSearchService, userCreationService: UserCreationService, userUpdateService: UserUpdateService, userDeletionService: UserDeletionService, userLoginService: UserLoginService, tokenService: TokenService, client: ClientProxy);
+    private readonly contactService;
+    constructor(userSearchService: UserSearchService, userCreationService: UserCreationService, userUpdateService: UserUpdateService, userDeletionService: UserDeletionService, userLoginService: UserLoginService, tokenService: TokenService, contactService: ContactService);
     getUserById(uuid: string): Promise<UserResponse>;
     getUserByEmail(email: string): Promise<UserResponse>;
     getUserByNickname(nickname: string): Promise<UserResponse>;
     getUserByPhone(phone: string): Promise<UserResponse>;
     searchUsers(text: string): Promise<UserResponse[]>;
-    createUser(data: UserRequest): Promise<string>;
-    loginUser(email: string, password: string): Promise<string>;
-    mfaLogin(token: string, code: string): Promise<boolean>;
+    createUser(data: UserRequest, client: ClientProxy): Promise<string>;
+    loginUser(email: string, password: string, client: ClientProxy): Promise<string>;
+    mfaLogin(code: string, user_uuid: string, type: string): Promise<boolean>;
     updateUser(token: string, data: UpdateUserDTO): Promise<string>;
     changePassword(token: string, newPassword: string): Promise<string>;
-    forgotPassword(email: string): Promise<ForgotPasswordResponse>;
+    forgotPassword(email: string, client: ClientProxy): Promise<ForgotPasswordResponse>;
     deleteUser(token: string): Promise<boolean>;
     sendCode(builder: BuilderRequest): Promise<string>;
-    resendCodeForgotPass(email: string): Promise<ForgotPasswordResponse>;
+    resendCodeForgotPass(email: string, client: ClientProxy): Promise<ForgotPasswordResponse>;
 }

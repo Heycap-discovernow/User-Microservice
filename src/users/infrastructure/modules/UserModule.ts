@@ -4,6 +4,7 @@ import { ContactModule } from "src/contacts/infrastructure/modules/ContactModule
 import { NotificationTransportModule } from "src/users/infrastructure/modules/NotificationTransportModule";
 
 import { CreateUserListener } from "src/users/infrastructure/adapters/listeners/CreateUserListener";
+import { GetByIdListener } from "src/users/infrastructure/adapters/listeners/GetByIdListener";
 import { SearchUserListener } from "src/users/infrastructure/adapters/listeners/SearchUserListener";
 import { UpdateUserListener } from "src/users/infrastructure/adapters/listeners/UpdateUserListener";
 import { DeletUserListener } from "src/users/infrastructure/adapters/listeners/DeleteUserListener";
@@ -14,7 +15,6 @@ import { EmailForgotPasswordListener } from "src/users/infrastructure/adapters/l
 import { UpdatePasswordListener } from "src/users/infrastructure/adapters/listeners/UpdatePasswordListener";
 import { VerifyCodeForgotPasswordListener } from "src/users/infrastructure/adapters/listeners/VerifyCodeForgotPasswordListener";
 import { ResendCodeListener } from "src/users/infrastructure/adapters/listeners/ResendCodeListener";
-import { VerifyNumberListener } from "src/users/infrastructure/adapters/listeners/VerifyNumberListener";
 
 import { UserManagementService } from "src/users/application/services/UserManagementService";
 import { UserSearchService } from "src/users/application/services/UserSearchService";
@@ -40,6 +40,7 @@ import { UserRepositoryAdapter } from 'src/users/infrastructure/adapters/reposit
     imports: [NotificationTransportModule, ContactModule],
     controllers: [
         CreateUserListener,
+        GetByIdListener,
         SearchUserListener,
         UpdateUserListener,
         DeletUserListener,
@@ -50,7 +51,6 @@ import { UserRepositoryAdapter } from 'src/users/infrastructure/adapters/reposit
         UpdatePasswordListener,
         VerifyCodeForgotPasswordListener,
         ResendCodeListener,
-        VerifyNumberListener
     ],
     providers: [
         UserSearchService,

@@ -15,14 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResendCodeListener = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
+const config_1 = require("../../../../config");
 const UserManagementService_1 = require("../../../application/services/UserManagementService");
 let ResendCodeListener = class ResendCodeListener {
-    constructor(userService) {
+    constructor(userService, client) {
         this.userService = userService;
+        this.client = client;
     }
     async resendCode(email) {
         try {
-            return await this.userService.resendCodeForgotPass(email);
+            return await this.userService.resendCodeForgotPass(email, this.client);
         }
         catch (error) {
             return error;
@@ -39,6 +41,8 @@ __decorate([
 ], ResendCodeListener.prototype, "resendCode", null);
 exports.ResendCodeListener = ResendCodeListener = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [UserManagementService_1.UserManagementService])
+    __param(1, (0, common_1.Inject)(config_1.TRANSPORT)),
+    __metadata("design:paramtypes", [UserManagementService_1.UserManagementService,
+        microservices_1.ClientProxy])
 ], ResendCodeListener);
 //# sourceMappingURL=ResendCodeListener.js.map
